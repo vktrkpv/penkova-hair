@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* 🔸 Твоя палітра (без конфіг-файлів) */
+@theme {
+  --color-brand-primary: #7A5C47; /* coffee */
+  --color-brand-ink:     #5A5047; /* gray-brown (text) */
+  --color-brand-accent:  #C9C2BA; /* warm gray */
+  --color-brand-bg:      #F5F0E8; /* light beige (page bg) */
+  --color-brand-surface: #FFFFFF; /* panels/cards */
+}
+
+/* База */
+@layer base {
+  body { @apply bg-brand-bg text-brand-ink antialiased; }
+  html { scroll-behavior: smooth; }
+}
+
+/* Приклад власного компонент-класу */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-xl
+           bg-brand-primary text-white hover:bg-brand-ink transition;
+  }
+}
