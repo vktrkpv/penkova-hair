@@ -1,3 +1,4 @@
+
 export default function Settings() {
   return (
     <div className="rounded-2xl border border-brand-accent/50 bg-brand-surface p-6 shadow-soft">

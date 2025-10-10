@@ -4,7 +4,7 @@ import ServiceCard from "../components/ServiceCard";
 import { popularServices } from "../data/services";
 import { Link } from "react-router-dom";
 import GalleryPreview from "../components/GalleryPreview";
-import { galleryPreview } from "../data/gallery";
+import { galleryHome } from "../data/gallery";
 import Testimonials from "../components/Testimonials";
 import { testimonials } from "../data/testimonials";
 
@@ -90,13 +90,14 @@ export default function Home() {
 
           <div className="mt-6 flex gap-3">
             <Link to="/book" className="btn">Book</Link>
-            <Link
-              to="/services"
-              className="inline-flex items-center rounded-xl border border-brand-accent px-4 py-2
-                         text-brand-ink hover:bg-brand-accent/30 transition"
-            >
-              Details
-            </Link>
+           <Link
+  to={`/services?open=${s.category}`}   // ← напр. open=treatments
+  className="inline-flex items-center rounded-xl border border-brand-accent px-4 py-2
+             text-brand-ink hover:bg-brand-accent/30 transition"
+>
+  Details
+</Link>
+
           </div>
         </div>
       ))}
@@ -116,7 +117,7 @@ export default function Home() {
 </section>
 
 <section>
-    <GalleryPreview items={galleryPreview}/>
+    <GalleryPreview items={galleryHome}/>
 
 </section>
 

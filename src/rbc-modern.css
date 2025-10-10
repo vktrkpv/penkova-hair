@@ -1,0 +1,188 @@
+/* --- Твоя палітра (підставимо під бежево-коричневу тему) --- */
+:root{
+  --brand-bg: #f5efe7;
+  --brand-surface: #f8f6f2;
+  --brand-border: rgba(0,0,0,.12);
+  --brand-ink: #2f2b28;
+  --brand-primary: #8b5e3c; /* коричневий */
+  --brand-primary-10: rgba(139,94,60,.10);
+  --brand-green-10: rgba(16,185,129,.12);
+  --brand-green-35: rgba(16,185,129,.35);
+  --brand-indigo-10: rgba(99,102,241,.12);
+  --brand-indigo-35: rgba(99,102,241,.35);
+  --brand-rose-10: rgba(244,63,94,.10);
+  --brand-rose-40: rgba(244,63,94,.40);
+}
+
+/* Контейнер */
+.rbc-calendar{
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 18px;
+  padding: 6px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.05);
+}
+
+/* Тулбар відключаємо — у нас свій */
+.rbc-toolbar{ display: none; }
+
+/* Колонкa часу/сітка */
+.rbc-time-view, .rbc-month-view{
+  border-color: var(--brand-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.rbc-time-header, .rbc-header{
+  background: white;
+  border-color: var(--brand-border);
+}
+.rbc-time-slot, .rbc-day-bg, .rbc-row-segment, .rbc-month-row{
+  border-color: var(--brand-border);
+}
+
+/* Сьогодні */
+.rbc-today{
+  background: var(--brand-primary-10);
+}
+
+/* Слот, який ти ховериш/виділяєш */
+.rbc-slot-selection{
+  background: rgba(0,0,0,.06);
+  border: 1px dashed var(--brand-border);
+  border-radius: 10px;
+}
+
+/* Вікно popup */
+.rbc-overlay{
+  border-radius: 12px;
+  overflow: hidden;
+  border-color: var(--brand-border);
+}
+
+/* Події — “chips” */
+.rbc-event{
+  border: 1px solid var(--brand-border);
+  border-radius: 12px;
+  padding: 4px 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+.rbc-event.rbc-selected{ outline: 2px solid var(--brand-primary-10); }
+
+/* Наш кастомний вміст події */
+.rbc-chip{ background: rgba(0,0,0,.04); border: 1px solid var(--brand-border); border-radius: 10px; padding: 2px 4px; }
+.rbc-chip .rbc-chip-title{ font-weight: 600; font-size: 13px; line-height: 1.2; }
+.rbc-chip .rbc-chip-sub{ font-size: 11px; opacity: .75; margin-top: 2px; }
+
+/* Статуси */
+.rbc-chip-confirmed{ background: var(--brand-green-10); border-color: var(--brand-green-35); }
+.rbc-chip-paid{ background: var(--brand-indigo-10); border-color: var(--brand-indigo-35); }
+.rbc-chip-canceled{ background: var(--brand-rose-10); border-color: var(--brand-rose-40); text-decoration: line-through; }
+
+
+/* ===== CONTRAST VARIANT (тепла коричнева тема) ===== */
+:root{
+  --brand-bg: #f3eee8;
+  --brand-surface: #f7f4f0;
+  --brand-border: rgba(34, 24, 20, .15);
+  --ink: #2f2622;
+
+  /* Події */
+  --evt-bg: #e9d9c9;     /* теплий беж */
+  --evt-ink: #2e231c;    /* темний текст */
+  --evt-brd: #c8b29c;    /* бордер */
+
+  --evt-confirmed-bg: #dff3ea;
+  --evt-confirmed-brd: #98d4bd;
+
+  --evt-paid-bg: #e2e4fb;
+  --evt-paid-brd: #b3b7f4;
+
+  --evt-canceled-bg: #fde2e6;
+  --evt-canceled-brd: #f3a3b0;
+}
+
+/* Прибрати default заливки у самій оболонці події — все вміст робимо своїм чіпом */
+.rbc-event {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Сам “чіп” події — щільний, контрастний */
+.rbc-chip{
+  background: var(--evt-bg);
+  color: var(--evt-ink);
+  border: 1px solid var(--evt-brd);
+  border-radius: 14px;
+  padding: 8px 10px;
+  line-height: 1.2;
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+}
+
+/* Варіанти за статусом */
+.rbc-chip--booked    { background: var(--evt-bg);           border-color: var(--evt-brd); }
+.rbc-chip--confirmed { background: var(--evt-confirmed-bg); border-color: var(--evt-confirmed-brd); }
+.rbc-chip--paid      { background: var(--evt-paid-bg);      border-color: var(--evt-paid-brd); }
+.rbc-chip--canceled  { background: var(--evt-canceled-bg);  border-color: var(--evt-canceled-brd); text-decoration: line-through; }
+
+/* Внутрішня типографіка — більше, читабельно */
+.rbc-chip-time  { font-weight: 700; font-size: 13px; opacity: .9; }
+.rbc-chip-title { font-weight: 700; font-size: 14px; margin-top: 2px; }
+.rbc-chip-sub   { font-size: 12px; opacity: .8; margin-top: 2px; }
+
+/* Ховер/фокус — легке підняття */
+.rbc-event:hover .rbc-chip { box-shadow: 0 10px 22px rgba(0,0,0,.09); }
+
+/* Сітка/хедери — мʼякші бордери, але достатньо контрасту */
+.rbc-calendar{
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 18px;
+  padding: 6px;
+  box-shadow: 0 8px 26px rgba(0,0,0,.05);
+  color: var(--ink);
+}
+.rbc-time-view, .rbc-month-view{ border-color: var(--brand-border); border-radius: 14px; overflow: hidden; }
+.rbc-time-header, .rbc-header{ background: white; border-color: var(--brand-border); }
+.rbc-time-slot, .rbc-day-bg, .rbc-row-segment, .rbc-month-row{ border-color: var(--brand-border); }
+
+/* Сьогодні — помітна колонка */
+.rbc-today{ background: rgba(139,94,60,.10); }
+
+/* Popup */
+.rbc-overlay{ border-radius: 12px; overflow: hidden; border-color: var(--brand-border); }
+
+
+.rbc-chip-time  { font-size: 14px; }
+.rbc-chip-title { font-size: 15px; }
+
+
+/* Показуємо весь текст усередині події — без обрізання */
+.rbc-event,
+.rbc-event-content,
+.rbc-event-label {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.25;
+}
+
+/* Забираємо зайві внутрішні відступи від RBC — керуємо своїм “chip” */
+.rbc-time-view .rbc-event {
+  padding: 0 !important;
+}
+
+/* Робимо наш чіп трішки вищим і читабельнішим */
+.rbc-chip { padding: 10px 12px; }
+.rbc-chip-time  { font-size: 14px; font-weight: 700; }
+.rbc-chip-title { font-size: 15px; font-weight: 700; margin-top: 2px; }
+.rbc-chip-sub   { font-size: 12px; opacity: .85; margin-top: 2px; }
+
+/* Ми показуємо власний великий час, тому стандартний можна сховати */
+.rbc-event-label { display: none !important; }
+
+:root{
+  --evt-bg: #e0c9b3;   /* темніший теплий беж */
+  --evt-brd: #b6977c;  /* бордер контрастніший */
+}

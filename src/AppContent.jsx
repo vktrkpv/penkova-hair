@@ -21,7 +21,8 @@ import AdminDashboard from "./components/dashboards/AdminDashboard";
 /// Login 
 import AdminLayout from "./components/dashboards/AdminLayout";
 import Clients from "./components/dashboards/Clients";
-import AdminCalendar from "./components/dashboards/AdminCalendar";
+// import AdminCalendar from "./components/dashboards/AdminCalendar";
+import AdminBigCalendar from "./components/dashboards/AdminBigCalendar";
 import Settings from "./components/dashboards/Settings";
 
 import ClientDetails from "./components/dashboards/ClientDetails";
@@ -64,7 +65,7 @@ export default function AppContent() {
 >
   <Route index element={<AdminDashboard />} />
   <Route path="clients" element={<Clients />} />
-  <Route path="calendar" element={<AdminCalendar />} />
+  <Route path="calendar" element={<AdminBigCalendar />} />
   <Route path="settings" element={<Settings />} />
   <Route path="clients" element={<Clients />} />
 <Route path="clients/:id" element={<ClientDetails />} />

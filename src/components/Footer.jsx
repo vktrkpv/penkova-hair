@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import logo from '../assets/logoPenkova.png'
 
 export default function Footer() {
   // функція для scrollToTop
@@ -11,12 +12,17 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-12 grid gap-10 md:grid-cols-3">
         {/* Brand / About */}
         <div>
-          <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-full bg-brand-primary" aria-hidden />
-            <div className="text-lg font-semibold text-brand-ink">
-              Hair by <span className="text-brand-primary">Oleksandra</span>
-            </div>
-          </div>
+         <div className="flex items-center gap-2">
+  <img 
+    src={logo} 
+    alt="Logo" 
+    className="h-10 w-auto"  // h-10 або h-12 для красивого розміру
+  />
+  <span className="text-lg font-semibold text-brand-ink">
+    Hair by <span className="text-brand-primary">Oleksandra</span>
+  </span>
+</div>
+
           <p className="mt-4 text-sm text-brand-ink/70 leading-relaxed">
             Elegant, healthy hair with modern techniques.
             Precision cuts, soft blonding & effortless styling.
@@ -24,7 +30,7 @@ export default function Footer() {
 
           {/* Socials */}
           <div className="mt-4 flex items-center gap-3">
-            <a href="https://instagram.com/yourprofile" target="_blank" rel="noreferrer"
+            <a href="https://www.instagram.com/oleksandra_hairdresser_halifax/" target="_blank" rel="noreferrer"
                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-brand-accent/60 hover:bg-brand-accent/30 transition"
                aria-label="Instagram">
               <svg viewBox="0 0 24 24" className="h-4 w-4 text-brand-ink" fill="currentColor">
@@ -59,9 +65,9 @@ export default function Footer() {
         <div>
           <h4 className="text-sm font-semibold text-brand-ink">Contact</h4>
           <ul className="mt-3 space-y-2 text-sm text-brand-ink/80">
-            <li>📍 Halifax, NS</li>
-            <li>📞 <a href="tel:+10000000000" className="hover:text-brand-primary">+1 (000) 000-0000</a></li>
-            <li>✉️ <a href="mailto:hello@hairbyoleksandra.com" className="hover:text-brand-primary">hello@hairbyoleksandra.com</a></li>
+            <li>📍 219 Waverley Road, Dartmouth, Nova Scotia B2X2C3</li>
+            <li>📞 <a href="tel:+10000000000" className="hover:text-brand-primary"></a>+1 902 877 2155</li>
+            <li>✉️ <a href="mailto:hello@hairbyoleksandra.com" className="hover:text-brand-primary">admin@olexandrapenkova.com</a></li>
             <li className="pt-2">
               <Link to="/book" className="btn">BOOK NOW</Link>
             </li>

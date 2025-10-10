@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import logo from '../assets/logoPenkova.png'
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -18,7 +19,11 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-brand-accent/30 bg-brand-bg/80 backdrop-blur">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-          <div className="h-8 w-8 rounded-full bg-brand-primary" aria-hidden />
+<img 
+  src={logo} 
+  alt="Logo" 
+  className="h-15 w-auto" 
+/>
           <span className="font-semibold">Hair by <span className="text-brand-primary">Olexandra Penkova</span></span>
         </Link>
 
