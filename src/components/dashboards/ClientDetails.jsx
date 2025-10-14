@@ -6,6 +6,7 @@ import { useAuth } from "../../auth/AuthProvider";
 import { listenProcedures, addProcedure, deleteProcedure, appendProcedurePhotos } from "../../services/procedures";
 import ProcedureRow from "./ProcedureRow";
 import { uploadProcedurePhotos } from "../../services/storage";
+import { getOwnerUid } from "../../lib/ownerUid";
 
 function fmtDate(ms) {
   try {
@@ -68,7 +69,7 @@ export default function ClientDetails() {
         durationMin,
         formula,
         notes,
-        stylistUid: user.uid,
+        stylistUid: getOwnerUid(),
       });
 
       const procId = ref.id;

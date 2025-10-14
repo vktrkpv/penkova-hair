@@ -15,6 +15,7 @@ import AppointmentModal from "./AppointmentModal";
 import AddAppointmentModal from "../../components/dashboards/AddAppointmentModal";
 
 import type { AppointmentDraft, ServiceItem } from "../../types/appointments";
+import { getOwnerUid } from "../../lib/ownerUid";
 
 export type CalItem = {
   id: string;
@@ -56,7 +57,8 @@ function hhmmFromMs(ms: number) {
 
 export default function AdminBigCalendar() {
   const { user } = useAuth();
-  const ownerUid = (user as any)?.uid || null;
+  // const ownerUid = (user as any)?.uid || null;
+  const ownerUid = getOwnerUid();
 
   const [date, setDate] = useState<Date>(new Date());
   const [view, setView] = useState<View>(Views.WEEK);
@@ -91,6 +93,13 @@ export default function AdminBigCalendar() {
   }, [ownerUid, from, to]);
 
   const events = useMemo(() => mapToEvents(items), [items]);
+
+  
+
+
+
+
+
 
   const handleRangeChange = useCallback((range: any) => {
     if (Array.isArray(range)) {

@@ -11,7 +11,7 @@ import type { ClientMini } from "../../../types/appointments";
 import TimeStep from "./TimeStep";
 
 import { createAppointment, timeUtils, updateAppointment } from "../../../services/appointments";
-
+import { getOwnerUid } from "../../../lib/ownerUid";
 
 
 
@@ -69,7 +69,8 @@ export default function AddAppointmentModal({
   }, []);
 
   const { user } = useAuth() as AuthCtx;
-const ownerUid = user?.uid ?? null;
+// const ownerUid = user?.uid ?? null;
+const ownerUid = getOwnerUid();
 
 
   // const [draft, setDraft] = useState<AppointmentDraft>({

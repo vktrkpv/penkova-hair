@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { addClient, listenMyClients, deleteClient } from "../../services/clients";
+import { getOwnerUid } from "../../lib/ownerUid";
+
 
 export default function Clients() {
   const { user } = useAuth();
@@ -39,7 +41,7 @@ export default function Clients() {
     setErr("");
     if (!name.trim()) { setErr("Name is required"); return; }
     try {
-      await addClient({ ownerUid: user.uid, name, phone, email, notes });
+      await addClient({ ownerUid: getOwnerUid(), name, phone, email, notes });
       setName(""); setPhone(""); setEmail(""); setNotes("");
     } catch (e) {
       setErr(e.message);
