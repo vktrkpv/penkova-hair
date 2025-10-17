@@ -1,5 +1,4 @@
 import Header from './sections/Header'
-import DebugBar from './components/DebugBar'
 
 function App() {
 
@@ -7,7 +6,6 @@ function App() {
     <div>
       <Header/>
 
-<DebugBar/>
 
 
 

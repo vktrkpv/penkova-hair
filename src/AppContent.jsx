@@ -27,6 +27,10 @@ import Settings from "./components/dashboards/Settings";
 
 import ClientDetails from "./components/dashboards/ClientDetails";
 
+
+import DebugBar from './components/DebugBar'
+
+
 export default function AppContent() {
   const location = useLocation();
 
@@ -77,6 +81,8 @@ export default function AppContent() {
               {!shouldHideFooter && <Footer />}
 
       </div>
+
+<DebugBar/>
 
 
     </div>

@@ -12,6 +12,13 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+console.log(
+  "[ENV CHECK]",
+  "ak first4:", (import.meta.env.VITE_FIREBASE_API_KEY || "").slice(0,4),
+  "len:", (import.meta.env.VITE_FIREBASE_API_KEY || "").length
+);
+
+
 
 const app = initializeApp(firebaseConfig);
 
