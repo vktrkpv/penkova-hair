@@ -13,7 +13,7 @@ import Gallery from "./pages/Gallery";
 
 import Footer from "./components/Footer";
 import BackToTopButton from "./components/BackToTopButton";
-import DevCheck from "./pages/DevCheck";
+// import DevCheck from "./pages/DevCheck";
 import Login from "./pages/Login";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AdminDashboard from "./components/dashboards/AdminDashboard";
@@ -28,7 +28,6 @@ import Settings from "./components/dashboards/Settings";
 import ClientDetails from "./components/dashboards/ClientDetails";
 
 
-import DebugBar from './components/DebugBar'
 
 
 export default function AppContent() {
@@ -82,7 +81,6 @@ export default function AppContent() {
 
       </div>
 
-<DebugBar/>
 
 
     </div>

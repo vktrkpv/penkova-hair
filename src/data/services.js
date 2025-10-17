@@ -117,6 +117,34 @@ export const services = [
     popular: true,
   },
 
+  {
+  id: "treat-cold",
+  slug: "cold-hair-treatment",
+  category: "treatments",
+  title: "Cold Hair Treatment (Aminobotoxoplasty)",
+  desc:
+    "Heat-free restorative treatment that replenishes moisture and strengthens the hair fiber, reducing frizz and adding softness and shine — without straightening. Ideal for over-processed or bleached hair, and as a gentle recovery step between coloring services.",
+  notes: [
+    "Results typically last ~4–6 weeks, depending on home care and washing frequency.",
+    "Great as a strengthening course before stronger services (Keratin / Hair Botox) or between color appointments.",
+    "Home care: use sulfate-/paraben-free, color-safe products; add a weekly hydrating/rebuilding mask; always apply heat protectant.",
+    "Coloring: plan 1–2 weeks before or after the treatment (stylist will advise based on hair condition).",
+    "Not recommended on irritated scalp or fresh abrasions; a quick consultation/patch test is advised.",
+    "Suitable for most hair types; pregnancy/breastfeeding — at stylist’s discretion.",
+  ],
+  addOns: [{ id: "thick-extra", label: "Very thick hair (any length)", price: 50 }],
+  variants: [
+    { id: "short",      label: "Short hair",      durationMin: 60, price: 80 },   // 1:00
+    { id: "medium",     label: "Medium hair",     durationMin: 70, price: 100 },  // 1:10
+    { id: "long",       label: "Long hair",       durationMin: 80, price: 120 },  // 1:20
+    { id: "extra-long", label: "Extra long hair", durationMin: 90, price: 150 },  // 1:30
+  ],
+  popular: true,
+},
+
+
+  
+
   /* -------------------- EXTENSIONS -------------------- */
 
   {
@@ -213,6 +241,54 @@ export const services = [
     ],
   },
 
+  {
+  id: "color-single",
+  slug: "single-color-hair-coloring",
+  category: "coloring",
+  title: "Single-Color Hair Coloring",
+  desc:
+    "This service includes one-tone coloring — a classic, even application of color from roots to ends. It’s perfect if your roots have grown out or you’d like to refresh your existing shade and add shine without lightening or bleaching your hair.",
+  notes: [
+    "Please note: this is not a bleaching or lightening service — it’s a one-color application only."
+  ],
+  variants: [
+    // нижня межа в price, повний діапазон у priceRange
+    { id: "root",       label: "Root Touch-Up (single color)", durationMin: 120, price: 90,  priceRange: [90, 100] },
+    { id: "short",      label: "Short Hair",                    durationMin: 120, price: 90,  priceRange: [90, 100] },
+    { id: "medium",     label: "Medium Length",                 durationMin: 120, price: 100, priceRange: [100, 120] },
+    { id: "long",       label: "Long Hair",                     durationMin: 150, price: 120, priceRange: [120, 150] },
+    { id: "extra-long", label: "Extra Long Hair",               durationMin: 180, price: 150, priceRange: [150, 180] },
+  ],
+}, 
+
+{
+  id: "color-full-highlights",
+  slug: "full-coloring-highlights",
+  category: "coloring",
+  title: "Full Coloring / Highlights",
+  desc:
+    "Dimensional coloring tailored to your look — from subtle brightness to full transformation. Service time includes lightening and professional toning for a polished, even result.",
+  notes: [
+    "Service times include toning and finish; actual timing may vary by starting level and desired lift.",
+    "Maintenance: gloss/toner every 6–8 weeks helps keep shade fresh and shiny.",
+    "Home care: color-safe shampoo/conditioner, weekly hydrating mask, heat protectant.",
+    "If hair is very compromised or over-bleached, we may recommend a restorative treatment before coloring.",
+  ],
+  // за бажанням можна прибрати або змінити
+  addOns: [
+    { id: "thick-extra", label: "Very thick/extra long hair", price: 30 },
+    { id: "bond-builder", label: "Bond builder upgrade", price: 25 },
+  ],
+  variants: [
+    // durations: 4h, 3h, 2h → хвилини
+    { id: "full-head",  label: "Full Head (includes toning)",  durationMin: 240, price: 220 },
+    { id: "half-head",  label: "Half Head (includes toning)",  durationMin: 180, price: 180 },
+    { id: "top-only",   label: "Top Section Only (includes toning)", durationMin: 120, price: 120, priceRange: [120, 150] },
+  ],
+}
+
+
+
   
 ];
 
@@ -224,14 +300,46 @@ services.push({
   category: "haircuts",
   title: "Haircuts (includes wash & light styling)",
   desc: "Precision haircut with wash and light styling for a polished, everyday look.",
-  variants: [
-    { id: "short",      label: "Short Haircut",       durationMin: 30, price: 40 },
-    { id: "medium",     label: "Medium Haircut",      durationMin: 45, price: 55 },
-    { id: "long",       label: "Long Haircut",        durationMin: 60, price: 65 },
-    { id: "extra-long", label: "Extra Long Haircut",  durationMin: 75, price: 75 },
+  notes: [
+    "Service includes consultation, wash, precision cut, and light finish.",
+    "Please arrive with your hair detangled; excessive detangling may add time.",
   ],
-  popular: true, // якщо хочеш бачити в "Popular services"
+  variants: [
+    // Women’s Haircuts – Service Duration:
+    // Short & Medium Hair – 1 hour, Long & Extra-Long – 1.5 hours
+    { id: "short",      label: "Short Haircut",       durationMin: 60, price: 40 }, // 1:00
+    { id: "medium",     label: "Medium Haircut",      durationMin: 60, price: 55 }, // 1:00
+    { id: "long",       label: "Long Haircut",        durationMin: 90, price: 65 }, // 1:30
+    { id: "extra-long", label: "Extra Long Haircut",  durationMin: 90, price: 75 }, // 1:30
+  ],
+  popular: true,
 });
+
+services.push({
+  id: "cut-men-kids",
+  slug: "mens-kids-haircuts",
+  category: "haircuts",
+  title: "Men’s & Kids’ Haircuts",
+  desc:
+    "Clean, tailored cuts for men and kids. From classic fades and buzz cuts to tidy trims for boys and girls — quick, comfortable, and age-appropriate styling.",
+  notes: [
+    "Men’s Regular Cut typically includes consultation, clipper/scissor work, and simple finish.",
+    "Buzz Cut is one-length clipper cut all over; no scissor work or complex styling.",
+    "Kids’ haircuts are adapted for comfort and safety; please arrive with detangled hair.",
+    "Wash is optional for men/kids services; light finish included where suitable.",
+  ],
+  variants: [
+    // Men’s pricing
+    { id: "men-regular", label: "Regular Men’s Cut", durationMin: 60, price: 35 },
+    { id: "men-buzz",    label: "Buzz Cut",          durationMin: 25, price: 25 },
+    { id: "men-under",   label: "Undercut",          durationMin: 30, price: 20 },
+
+    // Kids’ pricing (ranges: нижня межа в price, повний діапазон у priceRange)
+    { id: "kids-boys",   label: "Boys’ Haircut (Kids)",           durationMin: 35, price: 25, priceRange: [25, 30] },
+    { id: "kids-girls",  label: "Girls’ Haircut (Kids & Teens)",  durationMin: 40, price: 30, priceRange: [30, 40] },
+  ],
+});
+
 
 
 /* -------------------- TEXTURE / PERM -------------------- */
@@ -256,6 +364,66 @@ services.push({
 
 
 /* -------------------- STYLING / UPDOS -------------------- */
+
+
+/* -------------------- STYLING: Flat Iron -------------------- */
+services.push({
+  id: "styling-flat-iron",
+  slug: "styling-with-flat-iron",
+  category: "styling",
+  title: "Styling with Flat Iron",
+  desc:
+    "Sleek, polished finish with a flat iron — choose a quick touch-up on dry hair or a full service with wash and blow dry for extra smoothness.",
+  notes: [
+    "Arrive with clean, fully dry, and detangled hair if booking a ‘Without Washing’ option.",
+    "Heat protectant is used before styling; avoid heavy oils beforehand.",
+    "For very thick/extra-long hair, timing and pricing may vary slightly.",
+  ],
+  addOns: [
+    { id: "thick-extra", label: "Very thick/extra-dense hair", price: 20 },
+  ],
+  variants: [
+    // Without Washing (on dry hair)
+    { id: "flat-dry-medium",     label: "Without Washing – Medium Hair",     durationMin: 30, price: 40, priceRange: [40, 80] },
+    { id: "flat-dry-long",       label: "Without Washing – Long Hair",       durationMin: 35, price: 40, priceRange: [40, 80] },
+    { id: "flat-dry-extralong",  label: "Without Washing – Extra Long Hair", durationMin: 45, price: 40, priceRange: [40, 80] },
+
+    // With Washing, Blow Dry & Flat Iron
+    { id: "flat-wash-medium",    label: "With Wash, Blow Dry & Flat Iron – Medium",     durationMin: 60,  price: 50, priceRange: [50, 100] },
+    { id: "flat-wash-long",      label: "With Wash, Blow Dry & Flat Iron – Long",       durationMin: 75,  price: 50, priceRange: [50, 100] },
+    { id: "flat-wash-extralong", label: "With Wash, Blow Dry & Flat Iron – Extra Long", durationMin: 90,  price: 50, priceRange: [50, 100] },
+  ],
+});
+
+
+/* -------------------- STYLING: Curling Iron -------------------- */
+services.push({
+  id: "styling-curling-iron",
+  slug: "styling-with-curling-iron",
+  category: "styling",
+  title: "Styling with Curling Iron",
+  desc:
+    "Soft waves or defined curls with a curling iron — from loose glam to bouncy volume. Book on dry hair or add wash and blow dry for best longevity.",
+  notes: [
+    "For ‘Without Washing’, please arrive with clean, fully dry, and detangled hair.",
+    "Curl longevity varies by hair type; setting products are used to extend wear.",
+    "Very thick/extra-long hair may require additional time.",
+  ],
+  addOns: [
+    { id: "thick-extra", label: "Very thick/extra-dense hair", price: 20 },
+  ],
+  variants: [
+    // Without Washing (on dry hair)
+    { id: "curl-dry-medium",     label: "Without Washing – Medium Hair",     durationMin: 40,  price: 40, priceRange: [40, 80] },
+    { id: "curl-dry-long",       label: "Without Washing – Long Hair",       durationMin: 60,  price: 40, priceRange: [40, 80] },
+
+    // With Washing, Blow Dry & Curling Iron
+    { id: "curl-wash-medium",    label: "With Wash, Blow Dry & Curling – Medium",     durationMin: 90,  price: 50, priceRange: [50, 100] }, // 1:30
+    { id: "curl-wash-long",      label: "With Wash, Blow Dry & Curling – Long",       durationMin: 90,  price: 50, priceRange: [50, 100] }, // 1.5h = 90
+    { id: "curl-wash-extralong", label: "With Wash, Blow Dry & Curling – Extra Long", durationMin: 105, price: 50, priceRange: [50, 100] }, // 1:45
+  ],
+});
+
 
 services.push({
   id: "styling-event",

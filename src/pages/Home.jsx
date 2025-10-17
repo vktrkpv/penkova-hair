@@ -125,7 +125,7 @@ export default function Home() {
 <section>
     <Testimonials
   items={testimonials}
-  googleProfileUrl="https://g.page/r/XXXXXXXX" // ← твій лінк на Google-профіль (опційно)
+  googleProfileUrl="https://www.google.com/maps/place/Hair+by+Oleksandra+Penkova/@44.6948757,-63.5504542,17z/data=!3m1!4b1!4m6!3m5!1s0x4b5a27e0fc11093b:0x7573bfe590aa921d!8m2!3d44.6948719!4d-63.5478793!16s%2Fg%2F11xrkzs2bt?entry=ttu&g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D" // ← твій лінк на Google-профіль (опційно)
  />
 </section>
 
