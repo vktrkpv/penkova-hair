@@ -7,8 +7,8 @@ export default function SummaryPanel({
   totalDuration = 0,
   totalPrice = 0,
   client = null,
-  dateISO = null,       // "YYYY-MM-DD" | null
-  start = null,         // "HH:mm" | null
+  dateISO = null,      
+  start = null,         
 }: {
   mode?: "compact" | "full";
   services?: ServiceItem[];
@@ -24,7 +24,6 @@ export default function SummaryPanel({
         {mode === "full" ? "Summary" : "Appointment Summary"}
       </h5>
 
-      {/* Client & time */}
       {(client || dateISO || start) && (
         <div className="text-sm text-gray-700 mb-3 space-y-1">
           {client && (

@@ -1,6 +1,6 @@
 // src/pages/admin/AdminBigCalendar.tsx
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Calendar, Views, View } from "react-big-calendar";
+import { Calendar } from "react-big-calendar";
 import { localizer } from "../../calendar/localizer";
 import { getRangeBounds } from "../../calendar/getRangeBounds";
 import { useAuth } from "../../auth/AuthProvider";
@@ -10,13 +10,15 @@ import CalendarToolbar from "./CalendarToolbar";
 import AddAppointmentController from "./AddAppointmentController";
 import EventChip from "./EventChip";
 import AppointmentModal from "./AppointmentModal";
-
-// ⬇️ важливо: шлях до твоєї модалки
 import AddAppointmentModal from "../../components/dashboards/AddAppointmentModal";
 
 import type { AppointmentDraft, ServiceItem } from "../../types/appointments";
 import { getOwnerUid } from "../../lib/ownerUid";
 
+import { listenBlocksRange } from "../../services/blocks";
+import AddBlockModal from "./calendarBlock/AddBlockModal";
+
+/* ───────────────────────── Types ───────────────────────── */
 export type CalItem = {
   id: string;
   start: number;
@@ -25,8 +27,6 @@ export type CalItem = {
   serviceName?: string;
   price?: number | null;
   status?: "booked" | "confirmed" | "paid" | "canceled";
-
-  // бажано, щоб слухач додавав ці поля у resource
   client?: { id?: string; name: string; phone?: string; email?: string };
   services?: ServiceItem[];
   stylistUid?: string;
@@ -34,20 +34,74 @@ export type CalItem = {
   date?: string; // "YYYY-MM-DD"
 };
 
+type RbcView = "month" | "week" | "work_week" | "day" | "agenda";
+
+/* ─────────────────────── Helpers ─────────────────────── */
 function mapToEvents(items: CalItem[]) {
-  return items.map((i) => {
+  const out: any[] = [];
+
+  for (const i of items) {
     const start = new Date(i.start);
     const end = new Date(i.end);
-    const svc = (i as any).serviceName || (i as any).servicesText || "";
-    const price = i.price != null ? ` · $${i.price}` : "";
-    return {
-      id: i.id,
-      title: (i.clientName || "Client") + (svc ? ` · ${svc}` : "") + price,
+
+    // ⬇️ СКИДАЄМО ВСІ full-day-like апойнтменти
+    if (isFullDayRange(start, end)) continue;
+
+    const name =
+      (i as any).clientName ||
+      (i as any).client?.name ||
+      [ (i as any).client?.firstName, (i as any).client?.lastName ]
+        .filter(Boolean)
+        .join(" ") ||
+      "Client";
+
+    const servicesText =
+      (i as any).serviceName ||
+      (Array.isArray((i as any).serviceNames) && (i as any).serviceNames.length
+        ? (i as any).serviceNames.join(" + ")
+        : Array.isArray((i as any).services) && (i as any).services.length
+        ? (i as any).services.map((s: any) => s?.name).filter(Boolean).join(" + ")
+        : "");
+
+    const priceNum =
+      (i as any).priceTotal ??
+      (i as any).price ??
+      (Array.isArray((i as any).services)
+        ? (i as any).services.reduce((sum: number, s: any) => sum + (Number(s?.price) || 0), 0)
+        : undefined);
+    const price = priceNum != null ? ` · $${priceNum}` : "";
+
+    out.push({
+      id: (i as any).id,
       start,
       end,
-      resource: { ...i, serviceName: svc },
-    };
-  });
+      title: servicesText ? `${name} — ${servicesText}${price}` : `${name}${price}`,
+      resource: {
+        ...i,
+        id: (i as any).id,
+        clientName: name,
+        serviceName: servicesText,
+        priceTotal: priceNum,
+        price: priceNum,
+        start,
+        end,
+      },
+    });
+  }
+
+  return out;
+}
+
+
+// ⬇️ НОВЕ: маппер для background-events (тільки фон)
+function mapBlocksToBackground(rows: any[]) {
+  return rows.map((b) => ({
+    id: `block-bg:${b.id}`,
+    title: b.reason ? `Blocked — ${b.reason}` : "Blocked",
+    start: new Date(b.start),
+    end: new Date(b.end),
+    resource: { ...b, isBlock: true },
+  }));
 }
 
 function hhmmFromMs(ms: number) {
@@ -55,28 +109,49 @@ function hhmmFromMs(ms: number) {
   return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
+function isSameYMD(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() &&
+         a.getMonth() === b.getMonth() &&
+         a.getDate() === b.getDate();
+}
+
+function isFullDayRange(start: Date, end: Date) {
+  // 00:00 → 23:59/59:59 того ж дня, або тривалість ≥ 23 год
+  const durH = (end.getTime() - start.getTime()) / 3600000;
+  const fullDayHours = durH >= 23;
+  const startMidnight = start.getHours() === 0 && start.getMinutes() === 0;
+  const endAlmostMidnight = end.getHours() === 23 && end.getMinutes() >= 55;
+  return fullDayHours || (isSameYMD(start, end) && startMidnight && endAlmostMidnight);
+}
+function overlapsBlock(evStart: Date, evEnd: Date, blocks: any[]) {
+  return blocks.some(b => evStart < new Date(b.end) && evEnd > new Date(b.start));
+}
+
+
+/* ─────────────────────── Component ─────────────────────── */
 export default function AdminBigCalendar() {
   const { user } = useAuth();
-  // const ownerUid = (user as any)?.uid || null;
   const ownerUid = getOwnerUid();
 
   const [date, setDate] = useState<Date>(new Date());
-  const [view, setView] = useState<View>(Views.WEEK);
+  const [view, setView] = useState<RbcView>("week");
   const [items, setItems] = useState<CalItem[]>([]);
   const [err, setErr] = useState("");
 
-  // 1) Перегляд події (клік по івенту)
   const [opened, setOpened] = useState<CalItem | null>(null);
-
-  // 2) Редагування сервісів у великій модалці
   const [editing, setEditing] = useState<null | {
     apptId: string;
     initialDraft: AppointmentDraft;
     ownerUid: string;
   }>(null);
 
+  const [blocks, setBlocks] = useState<any[]>([]);
+  const [isBlockOpen, setBlockOpen] = useState(false);
+
+
   const { from, to } = useMemo(() => getRangeBounds(date, view), [date, view]);
 
+  // апойнтменти
   useEffect(() => {
     if (!ownerUid) return;
     const unsub = listenAppointmentsRange(
@@ -92,14 +167,44 @@ export default function AdminBigCalendar() {
     return () => unsub && unsub();
   }, [ownerUid, from, to]);
 
-  const events = useMemo(() => mapToEvents(items), [items]);
+  // ⬇️ НОВЕ: блоки
+  useEffect(() => {
+    if (!ownerUid) return;
+    const unsub = listenBlocksRange(
+      ownerUid,
+      from.getTime(),
+      to.getTime(),
+      (list: any[]) => setBlocks(list),
+      (e: any) => console.warn("[Blocks]", e?.code || "", e?.message || e)
+    );
+    return () => unsub && unsub();
+  }, [ownerUid, from, to]);
+
+const events = useMemo(() => {
+  const appts = mapToEvents(items);
 
   
 
+  // 1) прибираємо «повнодобові» апойнтменти (це і є та плашка 00:00–23:59)
+  // 2) ховаємо все, що перетинається з блоками (щоб візуально було ясно, що слот недоступний)
+  return appts.filter(ev => {
+    const s = ev.start as Date;
+    const e = ev.end as Date;
+    if (isFullDayRange(s, e)) return false;
+    if (overlapsBlock(s, e, blocks)) return false;
+    return true;
+  });
+}, [items, blocks]);
+  const backgroundBlocks = useMemo(() => mapBlocksToBackground(blocks), [blocks]);
 
+  const handleViewChange = useCallback((v: RbcView) => {
+    setView(v);
+  }, []);
 
-
-
+  const handleNavigate = useCallback((newDate: Date, newView?: RbcView) => {
+    if (newView) setView(newView);
+    setDate(newDate);
+  }, []);
 
   const handleRangeChange = useCallback((range: any) => {
     if (Array.isArray(range)) {
@@ -111,10 +216,10 @@ export default function AdminBigCalendar() {
   }, []);
 
   const onSelectEvent = useCallback((e: any) => {
+    // На цьому етапі клікаємо лише по апойнтментах
+    if (e?.resource?.isBlock) return;
     setOpened(e.resource as CalItem);
   }, []);
-
-  const eventPropGetter = useCallback(() => ({ style: {} }), []);
 
   const formats = {
     timeGutterFormat: "h:mm a",
@@ -129,13 +234,27 @@ export default function AdminBigCalendar() {
       <CalendarToolbar
         date={date}
         view={view}
-        onView={(v) => setView(v)}
+        onView={handleViewChange}
         onNavigate={(action) => {
           if (action === "TODAY") return setDate(new Date());
           const delta = view === "day" ? 1 : view === "week" ? 7 : 30;
-          setDate((d) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + (action === "NEXT" ? delta : -delta)));
+          setDate((d) =>
+            new Date(
+              d.getFullYear(),
+              d.getMonth(),
+              d.getDate() + (action === "NEXT" ? delta : -delta)
+            )
+          );
         }}
-        rightSlot={<AddAppointmentController />}
+        rightSlot={
+          <div className="flex gap-2">
+            <AddAppointmentController />
+<button className="px-3 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-800"
+        onClick={() => setBlockOpen(true)}>
+  Block
+</button>
+          </div>
+        }
       />
 
       {err && (
@@ -150,8 +269,8 @@ export default function AdminBigCalendar() {
           events={events}
           date={date}
           view={view}
-          onView={(v) => setView(v)}
-          onNavigate={(d) => setDate(d)}
+          onView={handleViewChange}
+          onNavigate={handleNavigate}
           onRangeChange={handleRangeChange}
           startAccessor="start"
           endAccessor="end"
@@ -160,26 +279,37 @@ export default function AdminBigCalendar() {
           popupOffset={8}
           showMultiDayTimes
           style={{ height: "72vh", background: "white", borderRadius: 14, padding: 6 }}
-          eventPropGetter={eventPropGetter}
           onSelectEvent={onSelectEvent}
           min={new Date(1970, 0, 1, 9, 0)}
           max={new Date(1970, 0, 1, 20, 0)}
           step={30}
           timeslots={2}
+          {...({ showAllDay: false } as any)}
+
+          /* ⬇️ НОВЕ: лише фон блоків */
+          {...({
+            backgroundEvents: backgroundBlocks,
+            backgroundEventPropGetter: () => ({
+              style: {
+                backgroundColor: "#e5e7eb",
+                border: "1px solid #cbd5e1",
+                borderRadius: 8,
+              },
+            }),
+          } as any)}
+
           components={{ event: EventChip }}
         />
       </div>
 
-      {/* ① Перегляд і дії по апоінтменту */}
+      {/* Перегляд / редагування апойнтменту — як було */}
       {opened && (
         <AppointmentModal
           item={opened as any}
           onClose={() => setOpened(null)}
           onEditServices={(appt: any) => {
-            // будую початковий драфт для модалки редагування
             const dateISO = appt.date ?? new Date(appt.start).toISOString().slice(0, 10);
-            const startHHMM =
-              timeUtils?.toHHMM?.(appt.start) ?? hhmmFromMs(appt.start);
+            const startHHMM = timeUtils?.toHHMM?.(appt.start) ?? hhmmFromMs(appt.start);
 
             const initialDraft: AppointmentDraft = {
               services: appt.services || [],
@@ -198,7 +328,6 @@ export default function AdminBigCalendar() {
         />
       )}
 
-      {/* ② Величезна модалка в режимі редагування сервісів */}
       {editing && (
         <AddAppointmentModal
           mode="edit"
@@ -208,6 +337,17 @@ export default function AdminBigCalendar() {
           onClose={() => setEditing(null)}
         />
       )}
+
+      {isBlockOpen && (
+  <AddBlockModal
+    ownerId={ownerUid!}
+    defaultStart={new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)}
+    defaultEnd={new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59)}
+    onClose={() => setBlockOpen(false)}
+    onSaved={() => {}}
+  />
+)}
+
     </div>
   );
 }

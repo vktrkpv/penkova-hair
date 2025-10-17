@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from '../assets/logoPenkova.png'
+import logo from '../../public/gallery/logoPenkova.png'
 
 export default function Footer() {
   // функція для scrollToTop

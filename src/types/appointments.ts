@@ -8,7 +8,6 @@ export type ServiceItem = {
 
 export type AppointmentDraft = {
   services: ServiceItem[];
-//   client: { id?: string; name?: string; phone?: string; email?: string } | null;
 client: ClientMini | null;
 date: Date | null;
   start?: string | null;    

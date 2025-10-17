@@ -1,5 +1,5 @@
 import { useState, useId, useEffect } from "react";
-import logo from '../../assets/logoPenkova.png'
+import logo from '../../../public/gallery/logoPenkova.png'
 
 /** Акордеон, що дозволяє відкритою бути тільки одній секції */
 export default function Accordion({ items = [], defaultOpenId = null, renderContent }) {

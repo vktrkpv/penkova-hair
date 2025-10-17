@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import logo from '../assets/logoPenkova.png'
+import logo from '../../public/gallery/logoPenkova.png'
 
 export default function Header() {
   const [open, setOpen] = useState(false);

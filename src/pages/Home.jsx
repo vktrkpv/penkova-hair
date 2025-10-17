@@ -1,4 +1,5 @@
-import stylist from "../assets/IMG_1122.jpg"; 
+import stylist from "../../public/gallery/IMG_1122.jpg"; 
+
 import SectionTitle from "../components/SectionTitle";
 import ServiceCard from "../components/ServiceCard";
 import { popularServices } from "../data/services";

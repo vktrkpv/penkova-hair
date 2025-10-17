@@ -10,7 +10,12 @@ const clientsCol = collection(db, "clients");
 
 // helpers
 const toLower = (s = "") => s.trim().toLowerCase();
-const normalizePhone = (s = "") => s.replace(/\D/g, ""); // тільки цифри
+const normalizePhone = (s = "") => s.replace(/\D/g, ""); 
+
+const lastLower = (name = "") => {
+  const parts = toLower(name).split(/\s+/).filter(Boolean);
+  return parts.length ? parts[parts.length - 1] : "";
+};
 
 export function listenMyClients(ownerUid, cb, onError) {
   const q = query(
@@ -31,10 +36,11 @@ export async function addClient({ ownerUid, name, phone = "", email = "", notes 
     ownerUid,
     name: name.trim(),
     nameLower: toLower(name),
+    lastNameLower: lastLower(name),
     phone: phone.trim(),
-    phoneLower: normalizePhone(phone),   // ⬅️ додали
+    phoneLower: normalizePhone(phone),   
     email: email.trim(),
-    emailLower: toLower(email),          // ⬅️ додали
+    emailLower: toLower(email),          
     notes: notes.trim(),
     createdAt: now,
     updatedAt: now,
@@ -45,8 +51,8 @@ export async function updateClient(id, data) {
   const ref = doc(db, "clients", id);
   const patch = {
     ...data,
-    ...(data.name  ? { nameLower: toLower(data.name) }     : {}),
-    ...(data.phone ? { phoneLower: normalizePhone(data.phone) } : {}),
+    ...(data.name  ? { nameLower: toLower(data.name), lastNameLower: lastLower(data.name) } : {}),
+    ...(data.phone ? { phoneLower: normalizePhone(data.phone) } : {}), 
     ...(data.email ? { emailLower: toLower(data.email) }   : {}),
     updatedAt: serverTimestamp(),
   };
@@ -58,18 +64,12 @@ export async function deleteClient(id) {
   return deleteDoc(ref);
 }
 
-/**
- * Пошук клієнтів:
- * - порожній запит → перші N по імені
- * - непорожній → префікс-пошук у nameLower, phoneLower, emailLower (3 окремі запити), злиття результатів
- * ВАЖЛИВО: може знадобитися створити індекси для orderBy(nameLower|phoneLower|emailLower) з where(ownerUid==)
- */
+
 export async function searchClients(ownerUid, qStr = "", max = 20) {
   const q = qStr.trim();
   const qLower = toLower(q);
   const qPhone = normalizePhone(q);
 
-  // 0) без запиту — просто перші N за ім'ям
   if (!q) {
     const base = query(
       clientsCol,
@@ -81,7 +81,6 @@ export async function searchClients(ownerUid, qStr = "", max = 20) {
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   }
 
-  // 1) nameLower префікс
   const byName = query(
     clientsCol,
     where("ownerUid", "==", ownerUid),
@@ -91,7 +90,15 @@ export async function searchClients(ownerUid, qStr = "", max = 20) {
     limit(max)
   );
 
-  // 2) phoneLower префікс (тільки якщо є цифри)
+  const byLast = query(
+    clientsCol,
+    where("ownerUid", "==", ownerUid),
+    orderBy("lastNameLower"),
+    startAt(qLower),
+    endAt(qLower + "\uf8ff"),
+    limit(max)
+  );
+
   const byPhone = qPhone
     ? query(
         clientsCol,
@@ -103,7 +110,6 @@ export async function searchClients(ownerUid, qStr = "", max = 20) {
       )
     : null;
 
-  // 3) emailLower префікс (корисно при наявності @)
   const byEmail = query(
     clientsCol,
     where("ownerUid", "==", ownerUid),
@@ -113,18 +119,22 @@ export async function searchClients(ownerUid, qStr = "", max = 20) {
     limit(max)
   );
 
-  const [nameSnap, phoneSnap, emailSnap] = await Promise.all([
+  const [nameSnap, lastSnap, phoneSnap, emailSnap] = await Promise.all([
     getDocs(byName),
+    getDocs(byLast),
     byPhone ? getDocs(byPhone) : Promise.resolve({ docs: [] }),
     getDocs(byEmail),
   ]);
 
-  // зливаємо унікально
   const map = new Map();
-  for (const docSnap of [...nameSnap.docs, ...phoneSnap.docs, ...emailSnap.docs]) {
+  for (const docSnap of [
+    ...nameSnap.docs, 
+    ...lastSnap.docs,
+    ...phoneSnap.docs, 
+    ...emailSnap.docs]) {
     const d = { id: docSnap.id, ...docSnap.data() };
     map.set(d.id, d);
   }
-  // легке сортування: ім'я, далі телефон/емейл
-  return Array.from(map.values()).sort((a, b) => (a.nameLower || "").localeCompare(b.nameLower || ""));
+  return Array.from(map.values()).sort((a, b) => (a.nameLower || "").localeCompare(b.nameLower || ""))
+  .slice(0, max);
 }

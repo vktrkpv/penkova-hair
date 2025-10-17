@@ -15,18 +15,18 @@ type Appointment = {
   start: number;
   end: number;
   clientName?: string;
-  serviceName?: string;        // або servicesText — мапер може прокинути сюди
+  serviceName?: string; 
   price?: number | null;
   status?: "booked" | "confirmed" | "paid" | "canceled";
   stylistUid?: string;
   durationMin?: number;
-  date?: string;               // "YYYY-MM-DD"
+  date?: string; 
 };
 
 export default function AppointmentModal({
   item,
   onClose,
-  onEditServices, // (опційно) прокинь із календаря щоб відкривати AddAppointmentModal у режимі edit
+  onEditServices, 
 }: {
   item: Appointment;
   onClose: () => void;
@@ -34,7 +34,6 @@ export default function AppointmentModal({
 }) {
   const [mode, setMode] = useState<"view" | "time">("view");
 
-  // ====== INLINE RESCHEDULE ======
   const [dateISO, setDateISO] = useState<string>(() =>
     item.date ? item.date : new Date(item.start).toISOString().slice(0, 10)
   );
@@ -56,7 +55,8 @@ export default function AppointmentModal({
           return;
         }
         const busy = await fetchBusyForDate(item.stylistUid!, dateISO);
-        const duration = item.durationMin || Math.round((item.end - item.start) / 60000);
+        const duration =
+          item.durationMin || Math.round((item.end - item.start) / 60000);
         const s = generateSlots({
           dayStart: avail.start,
           dayEnd: avail.end,
@@ -80,14 +80,20 @@ export default function AppointmentModal({
   const saveTime = async () => {
     if (!picked) return;
     const startMs = timeUtils.makeMs(dateISO, picked);
-    const duration = item.durationMin || Math.round((item.end - item.start) / 60000);
+    const duration =
+      item.durationMin || Math.round((item.end - item.start) / 60000);
     const endMs = startMs + duration * 60 * 1000;
-    await updateAppointment(item.id, { start: startMs, end: endMs, date: dateISO });
+    await updateAppointment(item.id, {
+      start: startMs,
+      end: endMs,
+      date: dateISO,
+    });
     onClose();
   };
 
-  // ====== STATUS ACTIONS ======
-  const setStatus = async (status: "booked" | "confirmed" | "paid" | "canceled") => {
+  const setStatus = async (
+    status: "booked" | "confirmed" | "paid" | "canceled"
+  ) => {
     await updateAppointment(item.id, { status });
     onClose();
   };
@@ -106,25 +112,41 @@ export default function AppointmentModal({
       <div className="relative z-10 w-full max-w-md rounded-2xl bg-white p-5 shadow-xl">
         <div className="mb-3 flex items-start justify-between">
           <h3 className="text-lg font-semibold">Appointment</h3>
-          <button className="text-sm text-neutral-600 hover:opacity-80" onClick={onClose}>✕</button>
+          <button
+            className="text-sm text-neutral-600 hover:opacity-80"
+            onClick={onClose}
+          >
+            ✕
+          </button>
         </div>
 
         {mode === "view" ? (
           <>
             <div className="space-y-2 text-sm">
-              <div><span className="opacity-60">Client:</span> {item.clientName || "Client"}</div>
-              <div><span className="opacity-60">Service:</span> {item.serviceName || "—"}</div>
-              <div><span className="opacity-60">Price:</span> {item.price != null ? `$${item.price}` : "—"}</div>
+              <div>
+                <span className="opacity-60">Client:</span>{" "}
+                {item.clientName || "Client"}
+              </div>
+              <div>
+                <span className="opacity-60">Service:</span>{" "}
+                {item.serviceName || "—"}
+              </div>
+              <div>
+                <span className="opacity-60">Price:</span>{" "}
+                {item.price != null ? `$${item.price}` : "—"}
+              </div>
               <div>
                 <span className="opacity-60">Time:</span>{" "}
-                {format(new Date(item.start), "dd MMM, HH:mm")} – {format(new Date(item.end), "HH:mm")}
+                {format(new Date(item.start), "dd MMM, HH:mm")} –{" "}
+                {format(new Date(item.end), "HH:mm")}
               </div>
-              <div><span className="opacity-60">Status:</span> {item.status ?? "booked"}</div>
+              <div>
+                <span className="opacity-60">Status:</span>{" "}
+                {item.status ?? "booked"}
+              </div>
             </div>
 
-            {/* КНОПКИ: статуси + редагування */}
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              {/* Статуси (завжди показуємо) */}
               {!isCanceled && (
                 <>
                   <button
@@ -156,7 +178,6 @@ export default function AppointmentModal({
                 </button>
               )}
 
-              {/* Редагування */}
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => setMode("time")}
@@ -168,27 +189,25 @@ export default function AppointmentModal({
                   onClick={() =>
                     onEditServices
                       ? onEditServices(item)
-                      : alert("Hook up onEditServices to open your AddAppointmentModal in edit mode")
+                      : alert(
+                          "Hook up onEditServices to open your AddAppointmentModal in edit mode"
+                        )
                   }
                   className="px-3 py-1.5 text-sm rounded-lg border hover:bg-gray-50"
                 >
                   Edit services
                 </button>
 
-                {/* Видалення — праворуч */}
-              <button
-                onClick={onDelete}
-                className="ml-auto px-3 py-1.5 text-sm rounded-lg border border-red-300 text-red-600 hover:bg-red-50"
-              >
-                Delete
-              </button>
+                <button
+                  onClick={onDelete}
+                  className="ml-auto px-3 py-1.5 text-sm rounded-lg border border-red-300 text-red-600 hover:bg-red-50"
+                >
+                  Delete
+                </button>
               </div>
-
-              
             </div>
           </>
         ) : (
-          // === MODE: TIME (inline reschedule) ===
           <div className="space-y-3">
             <div className="text-sm text-neutral-700">Reschedule</div>
 
@@ -203,8 +222,12 @@ export default function AppointmentModal({
               className="px-3 py-2 border rounded-xl"
             />
 
-            {slotLoading && <div className="text-sm text-gray-500">Loading slots…</div>}
-            {slotErr && <div className="text-sm text-red-600">Error: {slotErr}</div>}
+            {slotLoading && (
+              <div className="text-sm text-gray-500">Loading slots…</div>
+            )}
+            {slotErr && (
+              <div className="text-sm text-red-600">Error: {slotErr}</div>
+            )}
             {!slotLoading && !slotErr && slots.length === 0 && (
               <div className="text-sm text-gray-500">No available slots.</div>
             )}
@@ -216,7 +239,9 @@ export default function AppointmentModal({
                     key={t}
                     onClick={() => setPicked(t)}
                     className={`px-3 py-1.5 text-xs rounded-full border ${
-                      picked === t ? "bg-[var(--brand-surface)]" : "bg-white hover:bg-[var(--brand-surface)]/70"
+                      picked === t
+                        ? "bg-[var(--brand-surface)]"
+                        : "bg-white hover:bg-[var(--brand-surface)]/70"
                     }`}
                   >
                     {t}
@@ -226,14 +251,19 @@ export default function AppointmentModal({
             )}
 
             <div className="mt-2 flex gap-2">
-              <button onClick={() => setMode("view")} className="px-3 py-1.5 text-sm rounded-lg border hover:bg-gray-50">
+              <button
+                onClick={() => setMode("view")}
+                className="px-3 py-1.5 text-sm rounded-lg border hover:bg-gray-50"
+              >
                 Back
               </button>
               <button
                 onClick={saveTime}
                 disabled={!picked}
                 className={`px-3 py-1.5 text-sm rounded-lg text-white ${
-                  picked ? "bg-[var(--brand-primary,#3A5D56)] hover:opacity-90" : "bg-gray-300 cursor-not-allowed"
+                  picked
+                    ? "bg-[var(--brand-primary,#3A5D56)] hover:opacity-90"
+                    : "bg-gray-300 cursor-not-allowed"
                 }`}
               >
                 Save

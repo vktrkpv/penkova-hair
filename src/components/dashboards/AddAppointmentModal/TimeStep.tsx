@@ -62,7 +62,6 @@ export default function TimeStep({
     };
   }, [ownerUid, dateISO, totalDuration]);
 
-  // ✅ безпечна перевірка, бо draft.date може бути null
   const selected =
     draft.start &&
     draft.date &&
@@ -71,7 +70,6 @@ export default function TimeStep({
       : null;
 
   const onPick = (hhmm: string) => {
-    // ✅ явно підписуємо тип p, щоб TS не сварився
     setDraft((p: AppointmentDraft) => ({ ...p, date: new Date(dateISO), start: hhmm }));
   };
 
