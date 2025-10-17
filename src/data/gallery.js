@@ -1,10 +1,10 @@
 export const gallery = [
-  { src: "../../public/gallery/g1.jpg", alt: "Color & waves", tag: "blonding" },
-  { src: "../../public/gallery/g2.jpg", alt: "Soft blonding" },
-  { src: "../../public/gallery/g4.jpg", alt: "Gloss & tone" },
-  { src: "../../public/gallery/g5.jpg", alt: "Men’s fade" },
-  { src: "../../public/gallery/g6.jpg", alt: "Brunette shine" },
-    { src: "../../public/gallery/g7.jpg", alt: "Brunette shine" },
+  { src: "/gallery/g1.JPG", alt: "Soft blonding ", tag: "blonding" },
+  { src: "/gallery/g2.jpg", alt: "Color & waves" },
+  { src: "/gallery/g4.jpg", alt: "Gloss & tone" },
+  { src: "/gallery/g5.jpg", alt: "Men’s fade" },
+  { src: "/gallery/g6.jpg", alt: "Brunette shine" },
+  { src: "/gallery/g7.jpg", alt: "Brunette shine" },
 
 ];
 
