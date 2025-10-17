@@ -1,5 +1,5 @@
 export const gallery = [
-  { src: "/gallery/g1.JPG", alt: "Soft blonding ", tag: "blonding" },
+  { src: "/gallery/g1.jpg", alt: "Soft blonding ", tag: "blonding" },
   { src: "/gallery/g2.jpg", alt: "Color & waves" },
   { src: "/gallery/g4.jpg", alt: "Gloss & tone" },
   { src: "/gallery/g5.jpg", alt: "Men’s fade" },
