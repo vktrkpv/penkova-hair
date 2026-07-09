@@ -31,7 +31,7 @@ export default function Footer() {
 
           {/* Socials */}
           <div className="mt-4 flex items-center gap-3">
-            <a href="https://www.instagram.com/oleksandra_hairdresser_halifax/" target="_blank" rel="noreferrer"
+            <a href="https://www.instagram.com/oleksandra_hairdresser_bedford/" target="_blank" rel="noreferrer"
                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-brand-accent/60 hover:bg-brand-accent/30 transition"
                aria-label="Instagram">
               <svg viewBox="0 0 24 24" className="h-4 w-4 text-brand-ink" fill="currentColor">
@@ -55,8 +55,22 @@ export default function Footer() {
           <div>
             <h4 className="text-sm font-semibold text-brand-ink">Booking</h4>
             <ul className="mt-3 space-y-2 text-sm">
-              <li><Link to="/book"    className="hover:text-brand-primary">Book now</Link></li>
-              <li><Link to="/prices"  className="hover:text-brand-primary">Prices</Link></li>
+              <li><a
+  href="https://book.squareup.com/appointments/219sgrmdrrv2xc/location/L5VKDHT7EYBSK/services"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="btn"
+>
+  Book Now
+</a></li>
+              <li><a
+  href="https://book.squareup.com/appointments/219sgrmdrrv2xc/location/L5VKDHT7EYBSK/services"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="btn"
+>
+  Prices
+</a></li>
               <li><Link to="/contact" className="hover:text-brand-primary">Contact</Link></li>
             </ul>
           </div>
@@ -66,9 +80,9 @@ export default function Footer() {
         <div>
           <h4 className="text-sm font-semibold text-brand-ink">Contact</h4>
           <ul className="mt-3 space-y-2 text-sm text-brand-ink/80">
-            <li>📍 219 Waverley Road, Dartmouth, Nova Scotia B2X2C3</li>
+            <li>📍 32 Esquire Ln, Bedford, NS B4A 0K1</li>
             <li>📞 <a href="tel:+10000000000" className="hover:text-brand-primary"></a>+1 902 877 2155</li>
-            <li>✉️ <a href="mailto:hello@hairbyoleksandra.com" className="hover:text-brand-primary">admin@olexandrapenkova.com</a></li>
+            <li>✉️ <a href="mailto:penkova281191@gmail.com" className="hover:text-brand-primary">penkova281191@gmail.com</a></li>
             <li className="pt-2">
               <Link to="/book" className="btn">BOOK NOW</Link>
             </li>
@@ -88,13 +102,7 @@ export default function Footer() {
   
          
 
-            {/* Admin login */}
-            <Link
-              to="/login"
-              className="ml-2 inline-flex items-center rounded-full border border-brand-accent/60 px-3 py-1 text-xs hover:bg-brand-accent/30 transition"
-            >
-              Admin Login
-            </Link>
+         
           </div>
         </div>
       </div>

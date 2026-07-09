@@ -5,7 +5,7 @@ export default function Home() {
     <section className="relative min-h-screen overflow-hidden">
       <video
         className="absolute inset-0 h-full w-full object-cover"
-        src="/videos/hero-hair.mp4"
+        src="/videos/hero-hair-one.mp4"
         autoPlay
         muted
         loop

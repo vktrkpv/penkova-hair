@@ -19,13 +19,12 @@ export default function Header() {
     `text-sm transition ${isActive ? "text-brand-primary" : "hover:text-brand-primary"}`;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-brand-accent/30 bg-brand-bg/80 backdrop-blur">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
+<header className="fixed top-0 left-0 right-0 z-50 border-b border-white/20 bg-brand-bg/70 backdrop-blur"><div className="container mx-auto px-4 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
 <img 
   src={logo} 
   alt="Logo" 
-  className="h-15 w-auto" 
+  className="h-12 w-auto" 
 />
           <span className="font-semibold">Hair by <span className="text-brand-primary">Olexandra Penkova</span></span>
         </Link>
@@ -36,8 +35,14 @@ export default function Header() {
               {i.label}
             </NavLink>
           ))}
-          <Link to="/book" className="btn ml-2">BOOK NOW</Link>
-        </nav>
+<a
+  href="https://book.squareup.com/appointments/219sgrmdrrv2xc/location/L5VKDHT7EYBSK/services"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="btn ml-2"
+>
+  BOOK NOW
+</a>        </nav>
 
         <button
           className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-brand-accent/50"
@@ -71,9 +76,15 @@ export default function Header() {
               {i.label}
             </NavLink>
           ))}
-          <Link to="/book" className="btn w-full justify-center" onClick={() => setOpen(false)}>
-            BOOK NOW
-          </Link>
+          <a
+  href="https://book.squareup.com/appointments/219sgrmdrrv2xc/location/L5VKDHT7EYBSK/services"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="btn w-full justify-center"
+  onClick={() => setOpen(false)}
+>
+  BOOK NOW
+</a>
         </div>
       </div>
     </header>
