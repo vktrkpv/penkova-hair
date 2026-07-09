@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import logo from '../../public/gallery/logoPenkova.png'
+const logo = "/gallery/logoPenkova.png";
 
 export default function Footer() {
   // функція для scrollToTop
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
 
   return (
     <footer className="mt-20 border-t border-brand-accent/40 bg-brand-bg">

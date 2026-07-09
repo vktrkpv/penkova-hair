@@ -7,25 +7,21 @@ import ConditionalHeader from "./components/ConditionalHeader";
 import Home from "./pages/Home";
 import Reviews from "./pages/Reviews";
 import Contact from "./pages/Contact";
-import Book from "./pages/Book";
+// import Book from "./pages/Book";
 import Services from "./pages/Services";
 import Gallery from "./pages/Gallery";
 
 import Footer from "./components/Footer";
 import BackToTopButton from "./components/BackToTopButton";
-// import DevCheck from "./pages/DevCheck";
-import Login from "./pages/Login";
-import ProtectedRoute from "./auth/ProtectedRoute";
-import AdminDashboard from "./components/dashboards/AdminDashboard";
 
-/// Login 
-import AdminLayout from "./components/dashboards/AdminLayout";
-import Clients from "./components/dashboards/Clients";
-// import AdminCalendar from "./components/dashboards/AdminCalendar";
-import AdminBigCalendar from "./components/dashboards/AdminBigCalendar";
-import Settings from "./components/dashboards/Settings";
+// /// Login 
+// import AdminLayout from "./components/dashboards/AdminLayout";
+// import Clients from "./components/dashboards/Clients";
+// // import AdminCalendar from "./components/dashboards/AdminCalendar";
+// import AdminBigCalendar from "./components/dashboards/AdminBigCalendar";
+// import Settings from "./components/dashboards/Settings";
 
-import ClientDetails from "./components/dashboards/ClientDetails";
+// import ClientDetails from "./components/dashboards/ClientDetails";
 
 
 
@@ -51,14 +47,10 @@ export default function AppContent() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/book" element={<Book />} />
+          {/* <Route path="/book" element={<Book />} /> */}
 
-          {/* логін */}
-          <Route path="/login" element={<Login />} />
 
-          {/* <Route path="/dev-check" element={<DevCheck />} /> */}
-
-       <Route
+       {/* <Route
   path="/admin/*"
   element={
     <ProtectedRoute>
@@ -72,7 +64,7 @@ export default function AppContent() {
   <Route path="settings" element={<Settings />} />
   <Route path="clients" element={<Clients />} />
 <Route path="clients/:id" element={<ClientDetails />} />
-</Route>
+</Route> */}
         </Routes>
 
         <BackToTopButton />
